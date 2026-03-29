@@ -1,0 +1,36 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# 前端
+admin/node_modules/
+h5/
+mini-program/
+
+# 文档
+docs/
+*.md
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.env.docker
+
+# 其他
+*.log
+logs/
+uploads/
