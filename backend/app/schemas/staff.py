@@ -7,7 +7,7 @@ class StaffBase(BaseModel):
     """员工基础Schema"""
     username: str = Field(..., min_length=3, max_length=50, description="用户名")
     name: str = Field(..., min_length=1, max_length=50, description="姓名")
-    role: str = Field(default="cashier", description="角色: admin/cashier/cook")
+    role_id: Optional[int] = Field(None, description="角色ID")
 
 
 class StaffCreate(StaffBase):
@@ -18,13 +18,16 @@ class StaffCreate(StaffBase):
 class StaffUpdate(BaseModel):
     """更新员工请求"""
     name: Optional[str] = Field(None, min_length=1, max_length=50, description="姓名")
-    role: Optional[str] = Field(None, description="角色")
+    role_id: Optional[int] = Field(None, description="角色ID")
     password: Optional[str] = Field(None, min_length=6, max_length=50, description="密码")
 
 
-class StaffResponse(StaffBase):
+class StaffResponse(BaseModel):
     """员工响应"""
     id: int
+    username: str
+    name: str
+    role: Optional[str] = None
     created_at: Optional[datetime] = None
 
     class Config:
