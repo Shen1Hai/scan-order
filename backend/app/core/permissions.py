@@ -14,6 +14,7 @@ PERMISSION_CATEGORIES = {
     "inventory": "库存管理",
     "report": "报表统计",
     "merchant": "商户管理",
+    "coupon": "优惠券管理",
     "system": "系统设置"
 }
 
@@ -63,6 +64,10 @@ ALL_PERMISSIONS = [
     {"code": "report:staff", "name": "员工业绩", "category": "report"},
     {"code": "report:dashboard", "name": "仪表盘", "category": "report"},
 
+    # 优惠券权限
+    {"code": "coupon:read", "name": "查看优惠券", "category": "coupon"},
+    {"code": "coupon:write", "name": "管理优惠券", "category": "coupon"},
+
     # 系统权限
     {"code": "system:config", "name": "系统配置", "category": "system"},
 ]
@@ -87,6 +92,7 @@ SYSTEM_ROLES = {
             "role:read",
             "inventory:read", "inventory:write", "inventory:log",
             "report:sales", "report:dishes", "report:staff", "report:dashboard",
+            "coupon:read", "coupon:write",
         ]
     },
     "cashier": {

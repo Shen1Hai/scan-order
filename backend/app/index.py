@@ -19,12 +19,15 @@ from app.api import (
     auth_router,
     category_router,
     dish_router,
+    dish_ext_router,
     table_router,
     order_router,
     staff_router,
     inventory_router,
     report_router,
-    upload_router
+    upload_router,
+    package_router,
+    coupon_router
 )
 from app.api.operation_log import router as operation_log_router
 from app.services.websocket import websocket_endpoint
@@ -119,6 +122,7 @@ async def log_requests(request: Request, call_next):
 app.include_router(auth_router)
 app.include_router(category_router)
 app.include_router(dish_router)
+app.include_router(dish_ext_router)
 app.include_router(table_router)
 app.include_router(order_router)
 app.include_router(staff_router)
@@ -126,6 +130,8 @@ app.include_router(inventory_router)
 app.include_router(report_router)
 app.include_router(upload_router)
 app.include_router(operation_log_router)
+app.include_router(package_router)
+app.include_router(coupon_router)
 
 # 静态文件服务 (上传的文件)
 UPLOAD_DIR = Path(__file__).parent.parent / "uploads"
