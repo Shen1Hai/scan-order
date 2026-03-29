@@ -8,6 +8,7 @@ from datetime import datetime
 
 from fastapi import FastAPI, WebSocket, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 
@@ -22,8 +23,10 @@ from app.api import (
     order_router,
     staff_router,
     inventory_router,
-    report_router
+    report_router,
+    upload_router
 )
+from app.api.operation_log import router as operation_log_router
 from app.services.websocket import websocket_endpoint
 from app.services.init_service import init_sample_data
 
@@ -121,6 +124,13 @@ app.include_router(order_router)
 app.include_router(staff_router)
 app.include_router(inventory_router)
 app.include_router(report_router)
+app.include_router(upload_router)
+app.include_router(operation_log_router)
+
+# 静态文件服务 (上传的文件)
+UPLOAD_DIR = Path(__file__).parent.parent / "uploads"
+if UPLOAD_DIR.exists():
+    app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 
 # WebSocket 端点
 @app.websocket("/ws")

@@ -6,6 +6,7 @@ from app.models.category import Category
 from app.models.dish import Dish
 from app.models.order import Order, OrderItem
 from app.models.inventory import Inventory, InventoryLog
+from app.models.operation_log import OperationLog
 
 __all__ = [
     "Merchant",
@@ -19,5 +20,6 @@ __all__ = [
     "Order",
     "OrderItem",
     "Inventory",
-    "InventoryLog"
+    "InventoryLog",
+    "OperationLog"
 ]
