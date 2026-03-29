@@ -1,0 +1,27 @@
+<!--pages/orders/orders.wxml-->
+<view class="container">
+  <view class="orders-list">
+    <view
+      wx:for="{{orders}}"
+      wx:key="id"
+      class="order-card"
+    >
+      <view class="order-header">
+        <text class="order-no">{{item.order_no}}</text>
+        <text class="order-status status-{{item.status}}">{{getStatusText(item.status)}}</text>
+      </view>
+      <view class="order-info">
+        <text>桌号: {{item.table_name}}</text>
+        <text>下单时间: {{formatTime(item.created_at)}}</text>
+      </view>
+      <view class="order-footer">
+        <text class="order-total">¥{{item.total_amount}}</text>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{!orders.length}}">
+      <text class="icon">📋</text>
+      <text>暂无订单</text>
+    </view>
+  </view>
+</view>

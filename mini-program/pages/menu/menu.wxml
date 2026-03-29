@@ -1,0 +1,61 @@
+<!--pages/menu/menu.wxml-->
+<view class="container">
+  <!-- 分类标签 -->
+  <scroll-view scroll-x class="category-tabs">
+    <view
+      class="category-tab {{currentCategory === '' ? 'active' : ''}}"
+      bindtap="selectCategory"
+      data-id=""
+    >全部</view>
+    <view
+      wx:for="{{categories}}"
+      wx:key="id"
+      class="category-tab {{currentCategory === item.id ? 'active' : ''}}"
+      bindtap="selectCategory"
+      data-id="{{item.id}}"
+    >{{item.name}}</view>
+  </scroll-view>
+
+  <!-- 菜品列表 -->
+  <scroll-view scroll-y class="dish-list">
+    <view
+      wx:for="{{dishes}}"
+      wx:key="id"
+      class="dish-item"
+    >
+      <view class="dish-image">🍜</view>
+      <view class="dish-info">
+        <text class="dish-name">{{item.name}}</text>
+        <text class="dish-desc">{{item.description || '美味可口'}}</text>
+        <view class="dish-bottom">
+          <text class="dish-price">¥{{item.price}}</text>
+          <view class="dish-actions">
+            <text
+              wx:if="{{item.count > 0}}"
+              class="btn-minus"
+              bindtap="removeFromCart"
+              data-id="{{item.id}}"
+            >−</text>
+            <text wx:if="{{item.count > 0}}" class="dish-count">{{item.count}}</text>
+            <text class="btn-add" bindtap="addToCart" data-id="{{item.id}}">+</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{!dishes.length}}">
+      <text class="icon">🍽️</text>
+      <text>暂无菜品</text>
+    </view>
+  </scroll-view>
+
+  <!-- 购物车栏 -->
+  <view class="cart-bar" wx:if="{{cartCount > 0}}">
+    <view class="cart-info" bindtap="goToCart">
+      <text class="cart-icon">🛒</text>
+      <text class="cart-count">{{cartCount}}</text>
+      <text class="cart-total">¥{{cartTotal}}</text>
+    </view>
+    <button class="btn-checkout" bindtap="goToCart">去结算</button>
+  </view>
+</view>

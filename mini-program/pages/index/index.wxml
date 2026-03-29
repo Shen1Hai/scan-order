@@ -1,0 +1,41 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 首页 -->
+  <view class="home-page" wx:if="{{!tableId}}">
+    <view class="home-header">
+      <view class="logo">🍽️</view>
+      <text class="title">扫码点单</text>
+      <text class="subtitle">欢迎光临</text>
+    </view>
+
+    <view class="scan-section">
+      <button class="btn-scan" bindtap="scanQRCode">
+        <text class="icon">📷</text>
+        <text>扫描二维码</text>
+      </button>
+    </view>
+
+    <view class="input-section" wx:if="{{showManualInput}}">
+      <input
+        class="table-input"
+        placeholder="请输入桌位码"
+        bindinput="onTableCodeInput"
+        value="{{tableCode}}"
+      />
+      <button class="btn-confirm" bindtap="confirmTable">确认</button>
+    </view>
+
+    <text class="hint" wx:if="{{!showManualInput}}" bindtap="toggleManualInput">
+      无法扫码？手动输入桌位码
+    </text>
+  </view>
+
+  <!-- 桌位信息 -->
+  <view class="table-info" wx:if="{{tableId}}">
+    <view class="info-card">
+      <text class="table-name">{{tableName}}</text>
+      <text class="table-status">桌位状态: {{tableStatus}}</text>
+    </view>
+    <button class="btn-start" bindtap="startOrder">开始点单</button>
+  </view>
+</view>
