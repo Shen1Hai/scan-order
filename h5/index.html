@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>扫码点单</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 首页/扫码入口 -->
+        <div id="page-home" class="page">
+            <div class="home-header">
+                <h1>扫码点单</h1>
+                <p class="subtitle">欢迎光临</p>
+            </div>
+            <div class="home-content">
+                <div class="table-info" id="table-info">
+                    <div class="table-name" id="table-name">加载中...</div>
+                    <div class="table-status">桌位状态: <span id="table-status">空闲</span></div>
+                </div>
+                <button class="btn btn-primary btn-large" id="btn-start-order">开始点单</button>
+            </div>
+        </div>
+
+        <!-- 菜单页面 -->
+        <div id="page-menu" class="page hidden">
+            <header class="header">
+                <button class="btn-back" id="btn-back-menu">←</button>
+                <h2>点餐</h2>
+                <div class="cart-icon" id="cart-icon">
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+            </header>
+            <div class="category-tabs" id="category-tabs"></div>
+            <div class="dish-list" id="dish-list"></div>
+        </div>
+
+        <!-- 购物车页面 -->
+        <div id="page-cart" class="page hidden">
+            <header class="header">
+                <button class="btn-back" id="btn-back-cart">←</button>
+                <h2>购物车</h2>
+                <button class="btn-clear" id="btn-clear-cart">清空</button>
+            </header>
+            <div class="cart-items" id="cart-items"></div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    合计: <span id="cart-total">¥0.00</span>
+                </div>
+                <button class="btn btn-primary btn-large" id="btn-submit-order">提交订单</button>
+            </div>
+        </div>
+
+        <!-- 订单确认页面 -->
+        <div id="page-confirm" class="page hidden">
+            <header class="header">
+                <button class="btn-back" id="btn-back-confirm">←</button>
+                <h2>确认订单</h2>
+            </header>
+            <div class="confirm-content">
+                <div class="order-summary" id="order-summary"></div>
+                <div class="order-table">
+                    <span>桌号:</span>
+                    <span id="confirm-table-name"></span>
+                </div>
+                <div class="order-total">
+                    <span>应付金额:</span>
+                    <span id="confirm-total">¥0.00</span>
+                </div>
+                <button class="btn btn-primary btn-large" id="btn-pay">立即支付</button>
+            </div>
+        </div>
+
+        <!-- 支付页面 -->
+        <div id="page-pay" class="page hidden">
+            <div class="pay-content">
+                <div class="pay-amount">
+                    <span>支付金额</span>
+                    <span class="amount" id="pay-amount">¥0.00</span>
+                </div>
+                <div class="pay-method">
+                    <div class="pay-method-title">支付方式</div>
+                    <div class="pay-method-item selected">
+                        <span class="icon">💳</span>
+                        <span>微信支付</span>
+                        <span class="check">✓</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-large" id="btn-confirm-pay">确认支付</button>
+            </div>
+        </div>
+
+        <!-- 支付成功页面 -->
+        <div id="page-success" class="page hidden">
+            <div class="success-content">
+                <div class="success-icon">✓</div>
+                <h2>支付成功</h2>
+                <p>订单号: <span id="success-order-no"></span></p>
+                <button class="btn btn-secondary" id="btn-view-orders">查看订单</button>
+                <button class="btn btn-primary" id="btn-continue-order">继续点单</button>
+            </div>
+        </div>
+
+        <!-- 订单列表页面 -->
+        <div id="page-orders" class="page hidden">
+            <header class="header">
+                <button class="btn-back" id="btn-back-orders">←</button>
+                <h2>我的订单</h2>
+            </header>
+            <div class="orders-list" id="orders-list"></div>
+        </div>
+    </div>
+
+    <!-- 提示框 -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
