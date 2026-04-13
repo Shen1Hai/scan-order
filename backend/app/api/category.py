@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.core.database import get_db
-from app.core.security import get_current_user, require_roles
+from app.core.security import get_current_user, require_permissions
 from app.models.category import Category
 from app.models.staff import Staff
 from app.schemas.category import CategoryCreate, CategoryUpdate, CategoryResponse
@@ -36,10 +36,11 @@ async def get_category(category_id: int, db: Session = Depends(get_db)):
 async def create_category(
     category_data: CategoryCreate,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin"]))
+    current_user: Staff = Depends(require_permissions(["category:write"]))
 ):
     """创建分类（仅管理员）"""
-    category = Category(**category_data.model_dump())
+    category_data_dict = category_data.model_dump()
+    category = Category(merchant_id=current_user.merchant_id, **category_data_dict)
     db.add(category)
     db.commit()
     db.refresh(category)
@@ -51,7 +52,7 @@ async def update_category(
     category_id: int,
     category_data: CategoryUpdate,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin"]))
+    current_user: Staff = Depends(require_permissions(["category:write"]))
 ):
     """更新分类（仅管理员）"""
     category = db.query(Category).filter(Category.id == category_id).first()
@@ -71,7 +72,7 @@ async def update_category(
 async def delete_category(
     category_id: int,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin"]))
+    current_user: Staff = Depends(require_permissions(["category:write"]))
 ):
     """删除分类（仅管理员）"""
     category = db.query(Category).filter(Category.id == category_id).first()

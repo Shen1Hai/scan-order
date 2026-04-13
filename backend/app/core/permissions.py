@@ -49,6 +49,10 @@ ALL_PERMISSIONS = [
     {"code": "staff:read", "name": "查看员工", "category": "staff"},
     {"code": "staff:write", "name": "管理员工", "category": "staff"},
 
+    # 部门权限
+    {"code": "department:read", "name": "查看部门", "category": "department"},
+    {"code": "department:write", "name": "管理部门", "category": "department"},
+
     # 角色权限
     {"code": "role:read", "name": "查看角色", "category": "role"},
     {"code": "role:write", "name": "管理角色", "category": "role"},
@@ -89,6 +93,7 @@ SYSTEM_ROLES = {
             "table:read", "table:write", "table:qrcode",
             "order:read", "order:create", "order:update", "order:cancel", "order:pay",
             "staff:read", "staff:write",
+            "department:read", "department:write",
             "role:read",
             "inventory:read", "inventory:write", "inventory:log",
             "report:sales", "report:dishes", "report:staff", "report:dashboard",

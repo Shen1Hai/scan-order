@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Table, func
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Table, func, Boolean, Index
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
@@ -54,7 +54,3 @@ class Role(Base):
     __table_args__ = (
         Index('ix_role_merchant_code', 'merchant_id', 'code', unique=True),
     )
-
-
-# 需要先定义 Role 才能引用 Index
-from sqlalchemy import Index

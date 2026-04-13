@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, func
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, func, Index
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
@@ -47,4 +47,4 @@ class OperationLog(Base):
     )
 
 
-from sqlalchemy import Index
+from sqlalchemy import Index, Index

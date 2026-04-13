@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.models.merchant import Merchant
 from app.models.permission import Permission, Role, role_permissions
 from app.models.staff import Staff
+from app.models.department import Department
 from app.core.permissions import ALL_PERMISSIONS, SYSTEM_ROLES
 from app.core.security import get_password_hash
 
@@ -97,6 +98,33 @@ def init_super_admin(db: Session, merchant_id: int):
     return admin
 
 
+def init_departments(db: Session, merchant_id: int):
+    """初始化默认分店/区域"""
+    default_depts = [
+        {"name": "朝阳区门店", "code": "CHAOYANG", "sort_order": 1},
+        {"name": "海淀区门店", "code": "HAIDIAN", "sort_order": 2},
+        {"name": "浦东区门店", "code": "PUDONG", "sort_order": 3},
+    ]
+
+    for dept_data in default_depts:
+        existing = db.query(Department).filter(
+            Department.merchant_id == merchant_id,
+            Department.code == dept_data["code"]
+        ).first()
+        if not existing:
+            dept = Department(
+                merchant_id=merchant_id,
+                name=dept_data["name"],
+                code=dept_data["code"],
+                sort_order=dept_data["sort_order"],
+                status="active"
+            )
+            db.add(dept)
+
+    db.commit()
+    print(f"已为商户 {merchant_id} 初始化 {len(default_depts)} 个部门")
+
+
 def init_merchant(db: Session, name: str, code: str, parent_id: int = None):
     """初始化商户"""
     existing = db.query(Merchant).filter(Merchant.code == code).first()
@@ -131,5 +159,8 @@ def init_sample_data(db: Session):
 
     # 创建超级管理员
     init_super_admin(db, merchant.id)
+
+    # 初始化默认部门
+    init_departments(db, merchant.id)
 
     return merchant

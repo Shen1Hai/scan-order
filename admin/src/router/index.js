@@ -48,6 +48,18 @@ const routes = [
         meta: { title: '员工管理' }
       },
       {
+        path: 'roles',
+        name: 'Roles',
+        component: () => import('../views/Roles.vue'),
+        meta: { title: '角色管理' }
+      },
+      {
+        path: 'departments',
+        name: 'Departments',
+        component: () => import('../views/Departments.vue'),
+        meta: { title: '部门管理' }
+      },
+      {
         path: 'inventory',
         name: 'Inventory',
         component: () => import('../views/Inventory.vue'),

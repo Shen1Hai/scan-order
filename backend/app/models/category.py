@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func, Index
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
@@ -30,4 +30,4 @@ class Category(Base):
     )
 
 
-from sqlalchemy import Index
+from sqlalchemy import Index, Index

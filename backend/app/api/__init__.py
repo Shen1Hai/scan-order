@@ -10,6 +10,8 @@ from app.api.report import router as report_router
 from app.api.upload import router as upload_router
 from app.api.package import router as package_router
 from app.api.coupon import router as coupon_router
+from app.api.role import router as role_router
+from app.api.department import router as department_router
 
 __all__ = [
     "auth_router",
@@ -23,5 +25,7 @@ __all__ = [
     "report_router",
     "upload_router",
     "package_router",
-    "coupon_router"
+    "coupon_router",
+    "role_router",
+    "department_router"
 ]

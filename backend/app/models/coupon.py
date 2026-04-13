@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Numeric, DateTime, Boolean, ForeignKey, func
+from sqlalchemy import Column, Integer, String, Numeric, DateTime, Boolean, ForeignKey, func, Index
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
@@ -59,4 +59,4 @@ class CouponClaim(Base):
     order = relationship("Order")
 
 
-from sqlalchemy import Index
+from sqlalchemy import Index, Index

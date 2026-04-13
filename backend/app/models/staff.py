@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, func
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, func, Index
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
@@ -12,6 +12,7 @@ class Staff(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     merchant_id = Column(Integer, ForeignKey("merchants.id", ondelete="CASCADE"), nullable=False, index=True)
+    department_id = Column(Integer, ForeignKey("departments.id", ondelete="SET NULL"), nullable=True, comment="所属部门")
 
     username = Column(String(50), nullable=False, index=True, comment="用户名")
     password = Column(String(255), nullable=False, comment="密码")
@@ -28,13 +29,11 @@ class Staff(Base):
     # 关系
     merchant = relationship("Merchant", back_populates="staff")
     role = relationship("Role", back_populates="staff")
+    department = relationship("Department", back_populates="staff", foreign_keys="Staff.department_id")
     inventory_logs = relationship("InventoryLog", back_populates="operator")
+    managed_departments = relationship("Department", back_populates="manager", foreign_keys="Department.manager_id")
 
     # 同一商户下用户名唯一
     __table_args__ = (
         Index('ix_staff_merchant_username', 'merchant_id', 'username', unique=True),
     )
-
-
-# 需要先定义 Role 才能引用，但这里用字符串引用
-from sqlalchemy import Index

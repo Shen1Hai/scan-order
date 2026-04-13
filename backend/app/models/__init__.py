@@ -1,6 +1,7 @@
 from app.models.merchant import Merchant
 from app.models.permission import Permission, Role, role_permissions
 from app.models.staff import Staff
+from app.models.department import Department
 from app.models.tables import Table
 from app.models.category import Category
 from app.models.dish import Dish
@@ -18,6 +19,7 @@ __all__ = [
     "Role",
     "role_permissions",
     "Staff",
+    "Department",
     "Table",
     "Category",
     "Dish",

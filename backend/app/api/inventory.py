@@ -5,7 +5,7 @@ from typing import List
 from decimal import Decimal
 
 from app.core.database import get_db
-from app.core.security import get_current_user, require_roles
+from app.core.security import get_current_user, require_permissions
 from app.models.inventory import Inventory, InventoryLog
 from app.models.staff import Staff
 from app.schemas.inventory import (
@@ -78,10 +78,10 @@ async def get_inventory(
 async def create_inventory(
     inventory_data: InventoryCreate,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin"]))
+    current_user: Staff = Depends(require_permissions(["inventory:write"]))
 ):
     """创建库存物品"""
-    item = Inventory(**inventory_data.model_dump())
+    item = Inventory(merchant_id=current_user.merchant_id, **inventory_data.model_dump())
     db.add(item)
     db.commit()
     db.refresh(item)
@@ -102,7 +102,7 @@ async def update_inventory(
     inventory_id: int,
     inventory_data: InventoryUpdate,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin"]))
+    current_user: Staff = Depends(require_permissions(["inventory:write"]))
 ):
     """更新库存物品"""
     item = db.query(Inventory).filter(Inventory.id == inventory_id).first()
@@ -131,7 +131,7 @@ async def update_inventory(
 async def delete_inventory(
     inventory_id: int,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin"]))
+    current_user: Staff = Depends(require_permissions(["inventory:write"]))
 ):
     """删除库存物品"""
     item = db.query(Inventory).filter(Inventory.id == inventory_id).first()
@@ -176,7 +176,7 @@ async def create_inventory_log(
     inventory_id: int,
     log_data: InventoryLogCreate,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin", "cashier"]))
+    current_user: Staff = Depends(require_permissions(["inventory:log"]))
 ):
     """创建库存出入库记录"""
     item = db.query(Inventory).filter(Inventory.id == inventory_id).first()

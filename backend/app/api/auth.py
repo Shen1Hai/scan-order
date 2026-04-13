@@ -68,7 +68,7 @@ async def login(
     # 创建 Token，包含用户ID和商户ID
     access_token = create_access_token(
         data={
-            "sub": user.id,
+            "sub": str(user.id),
             "merchant_id": user.merchant_id,
             "role": user.role.code if user.role else None
         }

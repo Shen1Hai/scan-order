@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 
 from app.core.database import get_db
-from app.core.security import get_current_user, require_roles
+from app.core.security import get_current_user, require_permissions
 from app.models.order import Order, OrderItem
 from app.models.staff import Staff
 from app.models.dish import Dish
@@ -133,7 +133,7 @@ async def get_staff_report(
     start_date: str = Query(None, description="开始日期 YYYY-MM-DD"),
     end_date: str = Query(None, description="结束日期 YYYY-MM-DD"),
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin"]))
+    current_user: Staff = Depends(require_permissions(["report:staff"]))
 ):
     """获取员工业绩统计"""
     if not end_date:

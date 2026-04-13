@@ -8,6 +8,7 @@ class StaffBase(BaseModel):
     username: str = Field(..., min_length=3, max_length=50, description="用户名")
     name: str = Field(..., min_length=1, max_length=50, description="姓名")
     role_id: Optional[int] = Field(None, description="角色ID")
+    role: Optional[str] = Field(None, description="角色代码")
 
 
 class StaffCreate(StaffBase):

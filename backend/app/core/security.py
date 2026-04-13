@@ -111,12 +111,12 @@ async def get_current_user(
     if payload is None:
         raise credentials_exception
 
-    user_id: int = payload.get("sub")
+    user_id: str = payload.get("sub")
     merchant_id: int = payload.get("merchant_id")
     if user_id is None:
         raise credentials_exception
 
-    user = db.query(Staff).filter(Staff.id == user_id).first()
+    user = db.query(Staff).filter(Staff.id == int(user_id)).first()
     if user is None:
         raise credentials_exception
 
@@ -184,3 +184,35 @@ def verify_merchant_access(user: Staff, merchant_id: int, db: Session) -> bool:
 
     # 普通用户只能访问自己所属商户
     return user.merchant_id == merchant_id
+
+
+def require_roles(roles: List[str]):
+    """
+    角色检查装饰器
+
+    Args:
+        roles: 需要的角色列表
+    """
+    async def role_checker(
+        current_user: Staff = Depends(get_current_user),
+        db: Session = Depends(get_db)
+    ) -> Staff:
+        # 超级管理员拥有所有角色权限
+        if current_user.is_super_admin:
+            return current_user
+
+        if not current_user.role:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="用户未分配角色"
+            )
+
+        if current_user.role.code not in roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"需要角色: {', '.join(roles)}"
+            )
+
+        return current_user
+
+    return role_checker

@@ -15,31 +15,39 @@
           <el-icon><DataBoard /></el-icon>
           <span>仪表盘</span>
         </el-menu-item>
-        <el-menu-item index="/categories">
+        <el-menu-item index="/categories" v-if="hasPermission('category:read')">
           <el-icon><Grid /></el-icon>
           <span>分类管理</span>
         </el-menu-item>
-        <el-menu-item index="/dishes">
+        <el-menu-item index="/dishes" v-if="hasPermission('dish:read')">
           <el-icon><Food /></el-icon>
           <span>菜品管理</span>
         </el-menu-item>
-        <el-menu-item index="/tables">
-          <el-icon><TableLamp /></el-icon>
+        <el-menu-item index="/tables" v-if="hasPermission('table:read')">
+          <el-icon><Grid /></el-icon>
           <span>桌位管理</span>
         </el-menu-item>
-        <el-menu-item index="/orders">
+        <el-menu-item index="/orders" v-if="hasPermission('order:read')">
           <el-icon><Document /></el-icon>
           <span>订单管理</span>
         </el-menu-item>
-        <el-menu-item index="/staff">
+        <el-menu-item index="/staff" v-if="hasPermission('staff:read')">
           <el-icon><User /></el-icon>
           <span>员工管理</span>
         </el-menu-item>
-        <el-menu-item index="/inventory">
+        <el-menu-item index="/roles" v-if="hasPermission('role:read')">
+          <el-icon><Key /></el-icon>
+          <span>角色管理</span>
+        </el-menu-item>
+        <el-menu-item index="/departments" v-if="hasPermission('department:read')">
+          <el-icon><House /></el-icon>
+          <span>部门管理</span>
+        </el-menu-item>
+        <el-menu-item index="/inventory" v-if="hasPermission('inventory:read')">
           <el-icon><Box /></el-icon>
           <span>库存管理</span>
         </el-menu-item>
-        <el-menu-item index="/reports">
+        <el-menu-item index="/reports" v-if="hasPermission('report:dashboard')">
           <el-icon><DataAnalysis /></el-icon>
           <span>报表统计</span>
         </el-menu-item>
@@ -86,8 +94,14 @@ const route = useRoute()
 
 const username = ref('')
 const merchantName = ref('')
+const permissions = ref([])
 
 const activeMenu = computed(() => route.path)
+
+// 检查是否有指定权限
+const hasPermission = (permission) => {
+  return permissions.value.includes(permission) || permissions.value.includes('*')
+}
 
 onMounted(async () => {
   try {
@@ -98,6 +112,10 @@ onMounted(async () => {
     if (merchants.merchants?.length > 0) {
       merchantName.value = merchants.merchants[0].name
     }
+
+    // 获取权限列表
+    const perms = await api.getPermissions()
+    permissions.value = perms.permissions || []
   } catch (e) {
     console.error('获取用户信息失败:', e)
   }

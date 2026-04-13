@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func, Index
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
@@ -29,5 +29,3 @@ class Table(Base):
         Index('ix_table_merchant_code', 'merchant_id', 'code', unique=True),
     )
 
-
-from sqlalchemy import Index

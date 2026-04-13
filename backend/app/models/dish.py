@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Numeric, Text, DateTime, ForeignKey, Boolean, func
+from sqlalchemy import Column, Integer, String, Numeric, Text, DateTime, ForeignKey, Boolean, func, Index
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
@@ -40,4 +40,4 @@ class Dish(Base):
     cooking_methods = relationship("DishCooking", secondary="dish_cooking_association", back_populates="dishes")
 
 
-from sqlalchemy import Index
+from sqlalchemy import Index, Index

@@ -27,7 +27,9 @@ from app.api import (
     report_router,
     upload_router,
     package_router,
-    coupon_router
+    coupon_router,
+    role_router,
+    department_router
 )
 from app.api.operation_log import router as operation_log_router
 from app.services.websocket import websocket_endpoint
@@ -132,6 +134,8 @@ app.include_router(upload_router)
 app.include_router(operation_log_router)
 app.include_router(package_router)
 app.include_router(coupon_router)
+app.include_router(role_router)
+app.include_router(department_router)
 
 # 静态文件服务 (上传的文件)
 UPLOAD_DIR = Path(__file__).parent.parent / "uploads"

@@ -33,3 +33,4 @@ class Merchant(Base):
     dishes = relationship("Dish", back_populates="merchant", cascade="all, delete-orphan")
     orders = relationship("Order", back_populates="merchant", cascade="all, delete-orphan")
     inventory = relationship("Inventory", back_populates="merchant", cascade="all, delete-orphan")
+    departments = relationship("Department", back_populates="merchant", cascade="all, delete-orphan")

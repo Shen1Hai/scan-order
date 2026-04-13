@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import router from 'vue-router'
+import router from '../router'
 
 const API_BASE_URL = 'http://localhost:8000'
 
@@ -105,5 +105,28 @@ export const api = {
   getSalesReport: (params) => request.get('/api/reports/sales', { params }),
   getDishSalesReport: (params) => request.get('/api/reports/dishes', { params }),
   getStaffReport: (params) => request.get('/api/reports/staff', { params }),
-  getDashboard: () => request.get('/api/reports/dashboard')
+  getDashboard: () => request.get('/api/reports/dashboard'),
+
+  // 文件上传
+  uploadImage: (data) => request.post('/api/upload/image', data, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+
+  // 角色管理
+  getRoles: (params) => request.get('/api/roles', { params }),
+  getRole: (id) => request.get(`/api/roles/${id}`),
+  createRole: (data) => request.post('/api/roles', data),
+  updateRole: (id, data) => request.put(`/api/roles/${id}`, data),
+  deleteRole: (id) => request.delete(`/api/roles/${id}`),
+  updateRolePermissions: (id, data) => request.put(`/api/roles/${id}/permissions`, data),
+  getAllPermissions: () => request.get('/api/roles/permissions'),
+
+  // 部门管理
+  getDepartments: (params) => request.get('/api/departments', { params }),
+  getDepartmentTree: () => request.get('/api/departments/tree'),
+  getDepartment: (id) => request.get(`/api/departments/${id}`),
+  createDepartment: (data) => request.post('/api/departments', data),
+  updateDepartment: (id, data) => request.put(`/api/departments/${id}`, data),
+  deleteDepartment: (id) => request.delete(`/api/departments/${id}`),
+  setDepartmentManager: (id, managerId) => request.put(`/api/departments/${id}/manager`, null, { params: { manager_id: managerId } })
 }

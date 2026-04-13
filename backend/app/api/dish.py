@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session, joinedload
 from typing import List, Optional
 
 from app.core.database import get_db
-from app.core.security import get_current_user, require_roles
+from app.core.security import get_current_user, require_permissions
 from app.models.dish import Dish
 from app.models.category import Category
 from app.models.staff import Staff
@@ -76,7 +76,7 @@ async def get_dish(dish_id: int, db: Session = Depends(get_db)):
 async def create_dish(
     dish_data: DishCreate,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin", "cashier"]))
+    current_user: Staff = Depends(require_permissions(["dish:write"]))
 ):
     """创建菜品"""
     # 验证分类存在
@@ -85,7 +85,7 @@ async def create_dish(
         if not category:
             raise HTTPException(status_code=400, detail="分类不存在")
 
-    dish = Dish(**dish_data.model_dump())
+    dish = Dish(merchant_id=current_user.merchant_id, **dish_data.model_dump())
     db.add(dish)
     db.commit()
     db.refresh(dish)
@@ -97,7 +97,7 @@ async def update_dish(
     dish_id: int,
     dish_data: DishUpdate,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin", "cashier"]))
+    current_user: Staff = Depends(require_permissions(["dish:write"]))
 ):
     """更新菜品"""
     dish = db.query(Dish).filter(Dish.id == dish_id).first()
@@ -124,7 +124,7 @@ async def update_dish(
 async def delete_dish(
     dish_id: int,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin"]))
+    current_user: Staff = Depends(require_permissions(["dish:write"]))
 ):
     """删除菜品（仅管理员）"""
     dish = db.query(Dish).filter(Dish.id == dish_id).first()

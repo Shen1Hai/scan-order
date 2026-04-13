@@ -10,6 +10,21 @@
     <el-card>
       <el-table :data="dishes" stripe>
         <el-table-column prop="id" label="ID" width="80" />
+        <el-table-column prop="image" label="图片" width="100">
+          <template #default="{ row }">
+            <el-image
+              :src="row.image || '/uploads/dishes/default.png'"
+              fit="cover"
+              style="width: 60px; height: 60px; border-radius: 4px;"
+            >
+              <template #error>
+                <div class="image-error">
+                  <el-icon><Picture /></el-icon>
+                </div>
+              </template>
+            </el-image>
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="菜品名称" />
         <el-table-column prop="category_name" label="分类" width="120" />
         <el-table-column prop="price" label="价格" width="100">
@@ -39,8 +54,31 @@
     </el-card>
 
     <!-- 添加/编辑对话框 -->
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500px">
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="600px">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="菜品图片">
+          <div class="image-upload">
+            <el-image
+              :src="form.image || '/uploads/dishes/default.png'"
+              fit="cover"
+              class="upload-preview"
+            >
+              <template #error>
+                <div class="image-error">
+                  <el-icon><Picture /></el-icon>
+                </div>
+              </template>
+            </el-image>
+            <el-upload
+              class="upload-btn"
+              :show-file-list="false"
+              :before-upload="beforeImageUpload"
+              :http-request="handleImageUpload"
+            >
+              <el-button type="primary" size="small">上传图片</el-button>
+            </el-upload>
+          </div>
+        </el-form-item>
         <el-form-item label="菜品名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入菜品名称" />
         </el-form-item>
@@ -97,7 +135,8 @@ const form = ref({
   price: 0,
   stock: 0,
   description: '',
-  status: 'active'
+  status: 'active',
+  image: ''
 })
 
 const rules = {
@@ -121,11 +160,41 @@ const loadCategories = async () => {
   }
 }
 
+const beforeImageUpload = (file) => {
+  const isImage = file.type.startsWith('image/')
+  const isLt2M = file.size / 1024 / 1024 < 2
+
+  if (!isImage) {
+    ElMessage.error('只能上传图片文件')
+    return false
+  }
+  if (!isLt2M) {
+    ElMessage.error('图片大小不能超过 2MB')
+    return false
+  }
+  return true
+}
+
+const handleImageUpload = async (options) => {
+  const { file, onSuccess, onError } = options
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+    const result = await api.uploadImage(formData)
+    form.value.image = result.url
+    ElMessage.success('上传成功')
+    onSuccess()
+  } catch (e) {
+    ElMessage.error('上传失败')
+    onError()
+  }
+}
+
 const showDialog = (type, row = null) => {
   if (type === 'add') {
     dialogTitle.value = '添加菜品'
     isEdit.value = false
-    form.value = { name: '', category_id: null, price: 0, stock: 0, description: '', status: 'active' }
+    form.value = { name: '', category_id: null, price: 0, stock: 0, description: '', status: 'active', image: '' }
   } else {
     dialogTitle.value = '编辑菜品'
     isEdit.value = true

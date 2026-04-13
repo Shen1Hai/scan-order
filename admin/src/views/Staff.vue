@@ -54,6 +54,13 @@
         <el-form-item label="密码" prop="password" v-if="!isEdit">
           <el-input v-model="form.password" type="password" show-password />
         </el-form-item>
+        <el-form-item label="重置密码" v-if="isEdit">
+          <el-switch v-model="resetPassword" />
+          <span class="reset-tip" v-if="resetPassword">开启后需输入新密码</span>
+        </el-form-item>
+        <el-form-item label="新密码" prop="password" v-if="isEdit && resetPassword">
+          <el-input v-model="form.password" type="password" show-password placeholder="请输入新密码" />
+        </el-form-item>
         <el-form-item label="角色" prop="role">
           <el-select v-model="form.role" placeholder="请选择角色">
             <el-option label="超级管理员" value="super_admin" />
@@ -89,6 +96,7 @@ const dialogTitle = ref('添加员工')
 const formRef = ref()
 const isEdit = ref(false)
 const editingId = ref(null)
+const resetPassword = ref(false)
 
 const roleMap = {
   super_admin: '超级管理员',
@@ -108,10 +116,24 @@ const form = ref({
   status: 'active'
 })
 
+const validatePassword = (rule, value, callback) => {
+  if (isEdit.value && !resetPassword.value) {
+    callback()
+    return
+  }
+  if (!value) {
+    callback(new Error('请输入密码'))
+  } else if (value.length < 6) {
+    callback(new Error('密码长度不能少于6位'))
+  } else {
+    callback()
+  }
+}
+
 const rules = {
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+  password: [{ validator: validatePassword, trigger: 'blur' }]
 }
 
 const formatTime = (time) => {
@@ -131,10 +153,12 @@ const showDialog = (type, row = null) => {
   if (type === 'add') {
     dialogTitle.value = '添加员工'
     isEdit.value = false
+    resetPassword.value = false
     form.value = { username: '', name: '', password: '', role: 'cashier', status: 'active' }
   } else {
     dialogTitle.value = '编辑员工'
     isEdit.value = true
+    resetPassword.value = false
     editingId.value = row.id
     form.value = { ...row, password: '' }
   }
@@ -190,5 +214,11 @@ onMounted(() => {
 .page-title {
   font-size: 20px;
   font-weight: 600;
+}
+
+.reset-tip {
+  margin-left: 12px;
+  color: #909399;
+  font-size: 12px;
 }
 </style>

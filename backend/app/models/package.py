@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Numeric, Boolean, ForeignKey, func
+from sqlalchemy import Column, Integer, String, Numeric, Boolean, ForeignKey, DateTime, func, Index
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
@@ -55,4 +55,4 @@ class PackageItem(Base):
     dish = relationship("Dish")
 
 
-from sqlalchemy import Index
+from sqlalchemy import Index, Index

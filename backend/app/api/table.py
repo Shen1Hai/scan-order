@@ -6,9 +6,9 @@ import io
 import qrcode
 
 from app.core.database import get_db
-from app.core.security import get_current_user, require_roles
+from app.core.security import get_current_user, require_permissions
 from app.core.config import settings
-from app.models.table import Table
+from app.models.tables import Table
 from app.models.staff import Staff
 from app.schemas.table import TableCreate, TableUpdate, TableResponse, TableQRCode
 
@@ -73,7 +73,7 @@ async def get_table(
 async def create_table(
     table_data: TableCreate,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin"]))
+    current_user: Staff = Depends(require_permissions(["table:write"]))
 ):
     """创建桌位"""
     # 检查编码是否已存在
@@ -81,7 +81,7 @@ async def create_table(
     if existing:
         raise HTTPException(status_code=400, detail="桌位编码已存在")
 
-    table = Table(**table_data.model_dump())
+    table = Table(merchant_id=current_user.merchant_id, **table_data.model_dump())
     db.add(table)
     db.commit()
     db.refresh(table)
@@ -93,7 +93,7 @@ async def update_table(
     table_id: int,
     table_data: TableUpdate,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin", "cashier"]))
+    current_user: Staff = Depends(require_permissions(["table:write"]))
 ):
     """更新桌位"""
     table = db.query(Table).filter(Table.id == table_id).first()
@@ -113,7 +113,7 @@ async def update_table(
 async def delete_table(
     table_id: int,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin"]))
+    current_user: Staff = Depends(require_permissions(["table:write"]))
 ):
     """删除桌位"""
     table = db.query(Table).filter(Table.id == table_id).first()
@@ -129,7 +129,7 @@ async def delete_table(
 async def get_table_qrcode(
     table_id: int,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin"]))
+    current_user: Staff = Depends(require_permissions(["table:qrcode"]))
 ):
     """生成桌位二维码"""
     table = db.query(Table).filter(Table.id == table_id).first()
@@ -151,7 +151,7 @@ async def get_table_qrcode(
 @router.post("/batch-qrcodes")
 async def batch_generate_qrcodes(
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin"]))
+    current_user: Staff = Depends(require_permissions(["table:qrcode"]))
 ):
     """批量生成所有桌位二维码"""
     tables = db.query(Table).all()

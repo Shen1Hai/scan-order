@@ -6,9 +6,9 @@ from decimal import Decimal
 import uuid
 
 from app.core.database import get_db
-from app.core.security import get_current_user, require_roles
+from app.core.security import get_current_user, require_permissions
 from app.models.order import Order, OrderItem
-from app.models.table import Table
+from app.models.tables import Table
 from app.models.dish import Dish
 from app.models.staff import Staff
 from app.schemas.order import (
@@ -82,7 +82,8 @@ async def get_order_by_no(order_no: str, db: Session = Depends(get_db)):
 @router.post("", response_model=OrderResponse)
 async def create_order(
     order_data: OrderCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: Staff = Depends(get_current_user)
 ):
     """创建订单（顾客点单）"""
     # 验证桌位存在
@@ -112,6 +113,7 @@ async def create_order(
 
     # 创建订单
     order = Order(
+        merchant_id=current_user.merchant_id,
         order_no=generate_order_no(),
         table_id=table.id,
         table_name=table.name,
@@ -164,7 +166,7 @@ async def update_order_status(
     order_id: int,
     status_data: OrderStatusUpdate,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin", "cashier", "cook"]))
+    current_user: Staff = Depends(require_permissions(["order:update"]))
 ):
     """更新订单状态"""
     order = db.query(Order).filter(Order.id == order_id).first()
@@ -205,7 +207,7 @@ async def update_order_status(
 async def cancel_order(
     order_id: int,
     db: Session = Depends(get_db),
-    current_user: Staff = Depends(require_roles(["admin", "cashier"]))
+    current_user: Staff = Depends(require_permissions(["order:cancel"]))
 ):
     """取消订单"""
     order = db.query(Order).filter(Order.id == order_id).first()

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Numeric, Boolean, ForeignKey, func
+from sqlalchemy import Column, Integer, String, Numeric, Boolean, ForeignKey, DateTime, func, Index
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
@@ -24,6 +24,3 @@ class DishSpec(Base):
     __table_args__ = (
         Index('ix_dish_spec_dish', 'dish_id'),
     )
-
-
-from sqlalchemy import Index
